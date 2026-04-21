@@ -1,0 +1,17 @@
+name: Compilando mi aplicacion
+
+on:
+  push:
+    branches:
+     - build  # El trigger de este workflow se activará cuando haya un push a la rama build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # Esta acción permite que el workflow acceda al código de tu repositorio
+      - uses: actions/setup-node@v4  # Esta acción configura el entorno de Node.js para que puedas ejecutar comandos relacionados con Node
+        with:
+          node-version: 18
+      - run: npm install
+      - run: npm run build
