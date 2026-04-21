@@ -1,0 +1,10 @@
+name: Hola Mundo
+
+on:
+  workflow_dispatch:  # Se usa esto para que el workflow se ejecute manualmente desde la interfaz de GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World"
