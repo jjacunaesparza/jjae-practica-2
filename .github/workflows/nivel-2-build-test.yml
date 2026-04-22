@@ -5,7 +5,7 @@ on:
     branches:
      - build-test
     paths-ignore:
-     - 'src/*'
+#    - 'src/*'
      - 'package.json'
      - 'public/*'
 
