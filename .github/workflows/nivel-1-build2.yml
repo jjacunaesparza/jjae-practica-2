@@ -1,10 +1,10 @@
-name: Compilando mi aplicacion
+name: Compilando mi aplicacion - condicionado 2
 
 on:
   push:
     branches:
      - build-2
-    paths:
+    paths-ignore:
      - 'src/*'
      - 'package.json'
      - 'public/*'
