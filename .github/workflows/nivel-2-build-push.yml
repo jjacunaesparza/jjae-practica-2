@@ -27,6 +27,11 @@ jobs:
         run: |
           docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
 
+      - name: Debug vars
+        run: |
+          echo "actor: ${{ github.actor }}"
+          echo "repo: ${{ github.repository }}"
+
   test:
     runs-on: ubuntu-latest
     needs: build
