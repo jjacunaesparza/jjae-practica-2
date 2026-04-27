@@ -28,7 +28,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest  # Esto indica que se trata de una VM distinta a la del build
-    needs: build
+    needs: build  # Por default los jobs se ejecutan en paralelo, con esto indicamos que el test debe esperar a que termine el build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -13,5 +13,5 @@ jobs:
       - uses: actions/setup-node@v4  # Esta acción configura el entorno de Node.js para que puedas ejecutar comandos relacionados con Node
         with:
           node-version: 18
-      - run: npm install
+      - run: npm install  # run se usa para correr comandos en la terminal, en este caso se instalan las dependencias del proyecto
       - run: npm run build
