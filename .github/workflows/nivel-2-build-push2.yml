@@ -45,4 +45,4 @@ jobs:
 
       - name: Ejecutar tests dentro del contenedor
         run: |
-          docker run --rm ghcr.io/${{ github.repository }}:${{ github.sha }} npm test
+          run: docker run --rm ghcr.io/${{ github.repository }}:${{ github.sha }} sh -c "CI=true npm test -- --watchAll=false --runInBand --forceExit"
