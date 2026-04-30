@@ -62,7 +62,7 @@ jobs:
       - name: Autenticacion en AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: 557643338880.dkr.ecr.us-east-1.amazonaws.com/GitHubOidc-Role-lc1BFK2McWr1
+          role-to-assume: arn:aws:iam::557643338880:role/GitHubOidc-Role-lc1BFK2McWr1
           aws-region: us-east-1
     
       - name: Set Docker Image
