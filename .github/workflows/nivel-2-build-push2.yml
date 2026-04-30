@@ -1,9 +1,10 @@
 name: Docker Build + Subir a GHCR + Prueba en contenedor
 
 on:
-  push:
-    branches:
-      - push-imagen
+  workflow_dispatch:  # permite ejecutar manualmente desde la UI de GitHub
+#  push:
+    # branches:
+    #   - push-imagen
 
 jobs:
   build:

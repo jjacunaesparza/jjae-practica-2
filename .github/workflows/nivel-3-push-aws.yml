@@ -1,0 +1,81 @@
+name: Docker Build + Subir a AWS-ECR + Prueba en contenedor
+
+on:
+  push:
+    branches:
+      - push-imagen
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::557643338880:role/GitHubOidc-Role-lc1BFK2McWr1
+          aws-region: us-east-1
+
+      - name: Login a AWS-ECR
+        uses: aws-actions/amazon-ecr-login@v2 
+
+      - name: Build imagen
+        run: |
+          docker build -t 557643338880.dkr.ecr.us-east-1.amazonaws.com/jjae-webapp:latest .
+
+      - name: Push imagen
+        run: |
+          docker push 557643338880.dkr.ecr.us-east-1.amazonaws.com/jjae-webapp:latest
+
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Autenticacion en AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::557643338880:role/GitHubOidc-Role-lc1BFK2McWr1
+          aws-region: us-east-1
+        
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Pull imagen
+        run: docker pull 557643338880.dkr.ecr.us-east-1.amazonaws.com/jjae-webapp:latest
+
+      - name: Ejecutar tests dentro del contenedor
+        run: |
+          docker run --rm 557643338880.dkr.ecr.us-east-1.amazonaws.com/jjae-webapp:latest sh -c "CI=true npm test -- --watchAll=false --runInBand --forceExit"
+
+
+  deploy-to-ecs:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Autenticacion en AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: 557643338880.dkr.ecr.us-east-1.amazonaws.com/GitHubOidc-Role-lc1BFK2McWr1
+          aws-region: us-east-1
+    
+      - name: Set Docker Image
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        id: set-image
+        with:
+          task-definition: .aws/ecs-task-def.json
+          container-name: rickandmorty-webapp
+          image: 557643338880.dkr.ecr.us-east-1.amazonaws.com/jjae-webapp:latest
+
+      - name: Deploy a ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.set-image.outputs.task-definition }}
+          service: jjae-rickandmorty
+          cluster: jjae-webapp-cluster
+          wait-for-service-stability: true
