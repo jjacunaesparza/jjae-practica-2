@@ -86,5 +86,5 @@ jobs:
         with:
           task-definition: ${{ steps.set-image.outputs.task-definition }}
           service: jjae-rickandmorty
-          cluster: jjae-webapp-cluster
+          cluster: jjae-ecs-cluster
           wait-for-service-stability: true
